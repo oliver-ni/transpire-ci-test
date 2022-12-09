@@ -11,5 +11,5 @@ def objects():
 
 def images() -> list[Image]:
     return [
-        Image("hello", "/hello"),
+        Image(name="hello", path="/hello"),
     ]
