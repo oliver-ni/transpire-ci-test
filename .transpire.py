@@ -6,10 +6,9 @@ name = "transpire-ci-test"
 
 
 def objects():
-    return []
+    return
+    yield
 
 
-def images() -> list[Image]:
-    return [
-        Image(name="hello", path="/hello"),
-    ]
+def images():
+    yield Image(name="hello", path="/hello"),
