@@ -11,4 +11,4 @@ def objects():
 
 
 def images():
-    yield Image(name="hello", path="/hello"),
+    yield Image(name="hello", path="/hello")
