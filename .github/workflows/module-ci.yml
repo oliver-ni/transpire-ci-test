@@ -45,16 +45,11 @@ jobs:
         with:
           images: harbor.ocf.berkeley.edu/ocf/${{ inputs.module-name }}/${{ matrix.image.name }}
 
-      - uses: int128/docker-build-cache-config-action@v1
-        id: cache
-        with:
-          image: harbor.ocf.berkeley.edu/ocf/${{ inputs.module-name }}/${{ matrix.image.name }}/cache
-
       - uses: docker/build-push-action@v2
         with:
           context: "{{defaultContext}}:${{ matrix.image.path }}"
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
-          cache-from: ${{ steps.cache.outputs.cache-from }}
-          cache-to: ${{ steps.cache.outputs.cache-to }}
+          cache-from: type=registry,ref=IMAGE
+          cache-to: type=registry,ref=IMAGE,mode=max
