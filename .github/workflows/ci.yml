@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: ocf/kubernetes
+          repository: oliver-ni/kubernetes
 
       - run: transpire image build transpire-ci-test -o gha
 
