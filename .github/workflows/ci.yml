@@ -14,7 +14,7 @@ jobs:
         with:
           repository: ocf/kubernetes
 
-      - run: transpire image build -o gha
+      - run: transpire image build transpire-ci-test -o gha
 
   build-images:
     needs: build-matrix
