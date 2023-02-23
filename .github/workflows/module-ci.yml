@@ -1,0 +1,60 @@
+name: Transpire Module CI
+
+on:
+  workflow_call:
+    inputs:
+      module-name:
+        required: true
+        type: string
+    secrets:
+      HARBOR_USERNAME:
+        required: true
+      HARBOR_PASSWORD:
+        required: true
+
+jobs:
+  build-matrix:
+    runs-on: ubuntu-latest
+    container: ghcr.io/ocf/transpire
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: oliver-ni/kubernetes
+      - id: set-matrix
+        run: transpire image build ${{ inputs.module-name }} -o gha
+    outputs:
+      image_matrix: ${{ steps.set-matrix.outputs.image_matrix }}
+
+  build-images:
+    needs: build-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: ${{ fromJson(needs.build-matrix.outputs.image_matrix) }}
+    steps:
+      - uses: docker/setup-buildx-action@v2
+
+      - uses: docker/login-action@v2
+        with:
+          registry: harbor.ocf.berkeley.edu
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
+      - uses: docker/metadata-action@v3
+        id: metadata
+        with:
+          images: harbor.ocf.berkeley.edu/ocf/${{ matrix.image.name }}
+
+      - uses: int128/docker-build-cache-config-action@v1
+        id: cache
+        with:
+          image: harbor.ocf.berkeley.edu/ocf/${{ matrix.image.name }}/cache
+
+      - uses: docker/build-push-action@v2
+        with:
+          context: "{{defaultContext}}:${{ matrix.image.path }}"
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: ${{ steps.cache.outputs.cache-from }}
+          cache-to: ${{ steps.cache.outputs.cache-to }}
