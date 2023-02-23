@@ -13,8 +13,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: oliver-ni/kubernetes
-
-      - run: transpire image build transpire-ci-test -o gha
+      - id: set-matrix
+        run: transpire image build transpire-ci-test -o gha
+    outputs:
+      image_matrix: ${{ steps.set-matrix.outputs.image_matrix }}
 
   build-images:
     needs: build-matrix
