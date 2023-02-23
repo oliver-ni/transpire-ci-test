@@ -5,7 +5,7 @@ on:
 
 jobs:
   transpire-ci:
-    uses: oliver-ni/transpire-ci-test/.github/workflows/module-ci.yml@main
+    uses: ocf/transpire/.github/workflows/module-ci.yml@main
     with:
       module-name: transpire-ci-test
     secrets:
