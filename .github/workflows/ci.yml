@@ -5,9 +5,6 @@ on:
 
 jobs:
   transpire-ci:
-    uses: ocf/transpire/.github/workflows/module-ci.yml@main
+    uses: ocf/transpire-ci/.github/workflows/trigger.yml@master
     with:
-      module-name: transpire-ci-test
-    secrets:
-      HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
-      HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
+      module-name: transpire
